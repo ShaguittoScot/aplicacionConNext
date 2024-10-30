@@ -1,4 +1,4 @@
-'use client';
+/*'use client';
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation'; // Asumiendo que estás usando Next.js
@@ -94,3 +94,102 @@ export default function EditarUsuario({ idUsuario }) { // Se pasa el id del usua
         </div>
     );
 }
+*/
+
+'use client';
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+
+export default function EditarUsuario() {
+    const [usuario, setUsuario] = useState({
+        nombre: '',
+        usuario: '',
+        password: '', // Para manejar la contraseña
+    });
+    const router = useRouter();
+    const { id } = useParams(); // Obtiene el ID directamente desde la URL
+
+    useEffect(() => {
+        const obtenerUsuario = async () => {
+            try {
+                const respuesta = await axios.get(`http://localhost:3000/buscarUsuarioPorId/${id}`);
+                setUsuario(respuesta.data);
+            } catch (error) {
+                console.error("Error al obtener el usuario:", error);
+            }
+        };
+
+        if (id) obtenerUsuario(); // Asegúrate de que el ID esté definido
+    }, [id]);
+
+    const manejarCambio = (e) => {
+        const { name, value } = e.target;
+        setUsuario(prevUsuario => ({ ...prevUsuario, [name]: value }));
+    };
+
+    const guardarCambios = async () => {
+        try {
+            const url = `http://localhost:3000/editarUsuario/${id}`;
+            // Excluir la contraseña si está vacía
+            const { password, ...usuarioActualizado } = usuario;
+            if (password) {
+                usuarioActualizado.password = password; // Incluir la contraseña solo si no está vacía
+            }
+            await axios.put(url, usuarioActualizado);
+            alert("Usuario actualizado con éxito");
+            router.push("/usuarios");
+        } catch (error) {
+            console.error("Error al actualizar el usuario:", error);
+            alert("Hubo un error al actualizar el usuario");
+        }
+    };
+
+    return (
+        <div className="container">
+            <h1>Editar Usuario</h1>
+            <form>
+                <div className="mb-3">
+                    <label>Nombre</label>
+                    <input 
+                        type="text" 
+                        name="nombre" 
+                        value={usuario.nombre} 
+                        onChange={manejarCambio} 
+                        className="form-control" 
+                        required 
+                    />
+                </div>
+                <div className="mb-3">
+                    <label>Usuario</label>
+                    <input 
+                        type="text" 
+                        name="usuario" 
+                        value={usuario.usuario} 
+                        onChange={manejarCambio} 
+                        className="form-control" 
+                        required 
+                    />
+                </div>
+                <div className="mb-3">
+                    <label>Nueva Password (dejar en blanco si no se desea cambiar)</label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        value=""
+                        onChange={manejarCambio} 
+                        className="form-control" 
+                    />
+                </div>
+                <button type="button" onClick={guardarCambios} className="btn btn-success">
+                    Actualizar usuario
+                </button>
+                <button type="button" onClick={() => router.push("/usuarios")} className="btn btn-secondary ms-2">
+                    Cancelar
+                </button>
+            </form>
+        </div>
+    );
+}
+
+
