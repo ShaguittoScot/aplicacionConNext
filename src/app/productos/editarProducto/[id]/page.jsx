@@ -44,6 +44,7 @@ export default function EditarProducto() {
                     <input 
                         type="text" 
                         name="nombre" 
+                        autoComplete="off"
                         value={producto.nombre} 
                         onChange={manejarCambio} 
                         className="form-control" 
@@ -54,6 +55,7 @@ export default function EditarProducto() {
                     <input 
                         type="number" 
                         name="precio" 
+                        autoComplete="off"
                         value={producto.precio} 
                         onChange={manejarCambio} 
                         className="form-control" 
@@ -64,6 +66,7 @@ export default function EditarProducto() {
                     <input 
                         type="number" 
                         name="cantidad" 
+                        autoComplete="off"
                         value={producto.cantidad} 
                         onChange={manejarCambio} 
                         className="form-control" 
@@ -81,7 +84,7 @@ export default function EditarProducto() {
                 <button type="button" onClick={guardarCambios} className="btn btn-success">
                     Guardar
                 </button>
-                <button type="button" onClick={() => router.push("/mostrarProductos")} className="btn btn-secondary ms-2">
+                <button type="button" onClick={() => router.push("/productos/mostrar")} className="btn btn-secondary ms-2">
                     Cancelar
                 </button>
             </form>

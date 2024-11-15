@@ -59,6 +59,7 @@ export default function EditarUsuario() {
                     <input 
                         type="text" 
                         name="nombre" 
+                        autoComplete="off"
                         value={usuario.nombre} 
                         onChange={manejarCambio} 
                         className="form-control" 
@@ -69,7 +70,8 @@ export default function EditarUsuario() {
                     <label>Usuario</label>
                     <input 
                         type="text" 
-                        name="usuario" 
+                        name="usuario"
+                        autoComplete="off" 
                         value={usuario.usuario} 
                         onChange={manejarCambio} 
                         className="form-control" 
@@ -81,6 +83,7 @@ export default function EditarUsuario() {
                     <input 
                         type="password" 
                         name="password" 
+                        autoComplete="off"
                         value={usuario.password} 
                         onChange={manejarCambio} 
                         className="form-control" 
