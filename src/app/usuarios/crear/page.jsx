@@ -41,6 +41,7 @@ export default function CrearUsuario() {
                     <label htmlFor="nombre" className="form-label">Nombre</label>
                     <input 
                         type="text" 
+                        autoComplete='off'
                         className="form-control" 
                         id="nombre" 
                         value={nombre} 
@@ -52,6 +53,7 @@ export default function CrearUsuario() {
                     <label htmlFor="usuario" className="form-label">Usuario</label>
                     <input 
                         type="text" 
+                        autoComplete='off'
                         className="form-control" 
                         id="usuario" 
                         value={usuario} 
@@ -63,6 +65,7 @@ export default function CrearUsuario() {
                     <label htmlFor="password" className="form-label">Contraseña</label>
                     <input 
                         type="password" 
+                        autoComplete='off'
                         className="form-control" 
                         id="password" 
                         value={password} 

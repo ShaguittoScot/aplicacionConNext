@@ -1,125 +1,3 @@
-/*
-'use client';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-
-export default function CrearCompra() {
-    const [clientes, setClientes] = useState([]);
-    const [productos, setProductos] = useState([]);
-    const [idCliente, setIdCliente] = useState('');
-    const [idProducto, setIdProducto] = useState('');
-    const [cantidad, setCantidad] = useState('');
-    const router = useRouter();
-
-    useEffect(() => {
-        // Obtener la lista de clientes desde el backend
-        const fetchClientes = async () => {
-            try {
-                const respuesta = await axios.get("http://localhost:3000/");
-                setClientes(respuesta.data);
-            } catch (error) {
-                console.error("Error al obtener clientes:", error);
-            }
-        };
-
-        // Obtener la lista de productos desde el backend
-        const fetchProductos = async () => {
-            try {
-                const respuesta = await axios.get("http://localhost:3000/mostrarProductos");
-                setProductos(respuesta.data);
-            } catch (error) {
-                console.error("Error al obtener productos:", error);
-            }
-        };
-
-        fetchClientes();
-        fetchProductos();
-    }, []);
-
-    const manejarEnvio = async (e) => {
-        e.preventDefault();
-
-        try {
-            const compraData = {
-                idCliente,
-                idProducto,
-                cantidad: parseInt(cantidad, 10),
-            };
-
-            const respuesta = await axios.post("http://localhost:3000/nuevaCompra", compraData);
-
-            if (respuesta.data) {
-                alert("Compra registrada exitosamente");
-                router.push("/compras/mostrar");
-            } else {
-                alert("Error al registrar la compra");
-            }
-        } catch (error) {
-            console.error("Error al registrar la compra:", error);
-            alert("Error al registrar la compra");
-        }
-    };
-
-    return (
-        <div className="container">
-            <h1>Registrar Nueva Compra</h1>
-            <form onSubmit={manejarEnvio}>
-                <div className="mb-3">
-                    <label htmlFor="idCliente" className="form-label">Cliente</label>
-                    <select
-                        className="form-select"
-                        id="idCliente"
-                        value={idCliente}
-                        onChange={(e) => setIdCliente(e.target.value)}
-                        required
-                    >
-                        <option value="">Selecciona un cliente</option>
-                        {clientes.map(cliente => (
-                            <option key={cliente.id} value={cliente.id}>
-                                {cliente.nombre} 
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="idProducto" className="form-label">Producto</label>
-                    <select
-                        className="form-select"
-                        id="idProducto"
-                        value={idProducto}
-                        onChange={(e) => setIdProducto(e.target.value)}
-                        required
-                    >
-                        <option value="">Selecciona un producto</option>
-                        {productos.map(producto => (
-                            <option key={producto.id} value={producto.id}>
-                                {producto.nombre} 
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="cantidad" className="form-label">Cantidad</label>
-                    <input 
-                        type="number" 
-                        className="form-control" 
-                        id="cantidad" 
-                        value={cantidad} 
-                        onChange={(e) => setCantidad(e.target.value)} 
-                        required 
-                        min="1"
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">Registrar Compra</button>
-            </form>
-        </div>
-    );
-}
-
-*/
-
-
 'use client';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -136,7 +14,6 @@ export default function CrearCompra() {
     const router = useRouter();
 
     useEffect(() => {
-        // Obtener clientes y productos desde el backend
         const fetchDatos = async () => {
             try {
                 const respuestaClientes = await axios.get("http://localhost:3000/");
@@ -176,30 +53,17 @@ export default function CrearCompra() {
         }
     };
 
-   /* 
-   // Filtrar clientes y productos según la búsqueda
-    const clientesFiltrados = clientes.filter(cliente =>
-        cliente.nombre.toLowerCase().includes(clienteBusqueda.toLowerCase())
-    );
+    const clientesFiltrados = clienteBusqueda
+        ? clientes.filter(cliente =>
+            cliente.nombre.toLowerCase().includes(clienteBusqueda.toLowerCase())
+        )
+        : [];
 
-    const productosFiltrados = productos.filter(producto =>
-        producto.nombre.toLowerCase().includes(productoBusqueda.toLowerCase())
-    );
-    */
-
-    // Filtrar clientes y productos solo si hay texto en los campos de búsqueda
-const clientesFiltrados = clienteBusqueda
-? clientes.filter(cliente =>
-    cliente.nombre.toLowerCase().includes(clienteBusqueda.toLowerCase())
-)
-: [];
-
-const productosFiltrados = productoBusqueda
-? productos.filter(producto =>
-    producto.nombre.toLowerCase().includes(productoBusqueda.toLowerCase())
-)
-: [];
-
+    const productosFiltrados = productoBusqueda
+        ? productos.filter(producto =>
+            producto.nombre.toLowerCase().includes(productoBusqueda.toLowerCase())
+        )
+        : [];
 
     return (
         <div className="container">
@@ -210,6 +74,7 @@ const productosFiltrados = productoBusqueda
                     <input
                         type="text"
                         className="form-control"
+                        autoComplete='off'
                         id="clienteBusqueda"
                         placeholder="Escribe para buscar cliente"
                         value={clienteBusqueda}
@@ -222,8 +87,9 @@ const productosFiltrados = productoBusqueda
                                 key={cliente.id}
                                 className="list-group-item"
                                 onClick={() => {
-                                    setIdCliente(cliente.id);
-                                    setClienteBusqueda(cliente.nombre); // Mostrar el nombre en el campo de búsqueda
+                                    setIdCliente(cliente.id); // Guardar el ID del cliente seleccionado
+                                    setClienteBusqueda(cliente.nombre); // Completar el campo de texto
+                                    setClientes([]); // Ocultar la lista
                                 }}
                             >
                                 {cliente.nombre}
@@ -237,6 +103,7 @@ const productosFiltrados = productoBusqueda
                         type="text"
                         className="form-control"
                         id="productoBusqueda"
+                        autoComplete='off'
                         placeholder="Escribe para buscar producto"
                         value={productoBusqueda}
                         onChange={(e) => setProductoBusqueda(e.target.value)}
@@ -248,8 +115,9 @@ const productosFiltrados = productoBusqueda
                                 key={producto.id}
                                 className="list-group-item"
                                 onClick={() => {
-                                    setIdProducto(producto.id);
-                                    setProductoBusqueda(producto.nombre); // Mostrar el nombre en el campo de búsqueda
+                                    setIdProducto(producto.id); // Guardar el ID del producto seleccionado
+                                    setProductoBusqueda(producto.nombre); // Completar el campo de texto
+                                    setProductos([]); // Ocultar la lista
                                 }}
                             >
                                 {producto.nombre}
@@ -263,6 +131,7 @@ const productosFiltrados = productoBusqueda
                         type="number"
                         className="form-control"
                         id="cantidad"
+                        autoComplete='off'
                         value={cantidad}
                         onChange={(e) => setCantidad(e.target.value)}
                         required

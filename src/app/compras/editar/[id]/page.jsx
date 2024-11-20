@@ -78,6 +78,7 @@ export default function EditarCompra() {
                     <label htmlFor="clienteBusqueda" className="form-label">Cliente</label>
                     <input
                         type="text"
+                        autoComplete="off"
                         className="form-control"
                         id="clienteBusqueda"
                         placeholder="Escribe para buscar cliente"
@@ -110,6 +111,7 @@ export default function EditarCompra() {
                     <label htmlFor="productoBusqueda" className="form-label">Producto</label>
                     <input
                         type="text"
+                        autoComplete="off"
                         className="form-control"
                         id="productoBusqueda"
                         placeholder="Escribe para buscar producto"
@@ -149,6 +151,7 @@ export default function EditarCompra() {
                         onChange={manejarCambio}
                         required
                         min="1"
+                        autoComplete="off"
                     />
                 </div>
                 <button type="button" onClick={guardarCambios} className="btn btn-success">

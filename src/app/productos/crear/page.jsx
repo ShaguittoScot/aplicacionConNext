@@ -46,6 +46,7 @@ export default function CrearProducto() {
                         type="text" 
                         className="form-control" 
                         id="nombre" 
+                         autoComplete='off'
                         value={nombre} 
                         onChange={(e) => setNombre(e.target.value)} 
                         required 
@@ -55,6 +56,7 @@ export default function CrearProducto() {
                     <label htmlFor="descripcion" className="form-label">Descripción</label>
                     <input 
                         type="text" 
+                        autoComplete='off'
                         className="form-control" 
                         id="descripcion" 
                         value={descripcion} 
@@ -65,6 +67,7 @@ export default function CrearProducto() {
                     <label htmlFor="cantidad" className="form-label">Cantidad</label>
                     <input 
                         type="number" 
+                        autoComplete='off'
                         className="form-control" 
                         id="cantidad" 
                         value={cantidad} 
@@ -75,7 +78,8 @@ export default function CrearProducto() {
                 <div className="mb-3">
                     <label htmlFor="precio" className="form-label">Precio</label>
                     <input 
-                        type="number" 
+                        type="number"
+                        autoComplete='off' 
                         step="0.01" 
                         className="form-control" 
                         id="precio" 
