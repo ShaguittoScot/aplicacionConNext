@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 export default function ListaCompras() {
     const [compras, setCompras] = useState([]); // Estado para almacenar las compras
     const [compraSeleccionada, setCompraSeleccionada] = useState(null); // Estado para la compra seleccionada
+    const [mostrarCanceladas, setMostrarCanceladas] = useState(false); // Estado para el filtro
     const router = useRouter();
 
     useEffect(() => {
@@ -20,7 +21,7 @@ export default function ListaCompras() {
             }
         };
 
-        fetchCompras(); // llama a la funcion para obtener compras
+        fetchCompras(); // llama a la función para obtener compras
     }, []);
 
     const mostrarDetalles = (compra) => {
@@ -32,13 +33,13 @@ export default function ListaCompras() {
     };
 
     const redirigirAgregarProducto = () => {
-        router.push('/compras/nueva'); // Redirige a la pagina para un nuevo producto
+        router.push('/compras/nueva'); // Redirige a la página para un nuevo producto
     };
 
     const cambiarEstadoCompra = async (idVenta, nuevoEstado) => {
         try {
             await axios.patch(`http://localhost:3000/actualizarEstadoCompra/${idVenta}/${nuevoEstado}`);
-            // Actualiza la lista de compras despues de cambiar el estado
+            // Actualiza la lista de compras después de cambiar el estado
             const response = await axios.get("http://localhost:3000/mostrarCompras");
             setCompras(response.data);
             alert(`Estado de la compra actualizado a '${nuevoEstado}'`);
@@ -48,14 +49,25 @@ export default function ListaCompras() {
     };
 
     const redirigirEditarCompra = (idVenta) => {
-        router.push(`/compras/editar/${idVenta}`); // Redirige a la pagina de edicion de la compra con el ID
+        router.push(`/compras/editar/${idVenta}`); // Redirige a la página de edición de la compra con el ID
     };
+
+    // Lógica para filtrar compras según el estado
+    const comprasFiltradas = mostrarCanceladas
+        ? compras.filter(compra => compra.estado !== "cancelada")
+        : compras;
 
     return (
         <div className="container">
             <h1>Lista de Compras</h1>
             <button onClick={redirigirAgregarProducto} className="btn btn-primary mb-3">
                 Agregar nueva Compra
+            </button>
+            <button
+                onClick={() => setMostrarCanceladas(!mostrarCanceladas)}
+                className="btn btn-secondary mb-3 ms-2"
+            >
+                {mostrarCanceladas ? "Mostrar Todas" : "Filtrar Canceladas"}
             </button>
 
             <table className="table">
@@ -72,7 +84,7 @@ export default function ListaCompras() {
                     </tr>
                 </thead>
                 <tbody>
-                    {compras.map((compra, index) => (
+                    {comprasFiltradas.map((compra, index) => (
                         <tr key={compra.IdVenta}>
                             <td>{index + 1}</td>
                             <td>
@@ -89,32 +101,9 @@ export default function ListaCompras() {
                             <td>{compra.cantidad}</td>
                             <td>{compra.fecha}</td>
                             <td>{compra.hora}</td>
-                            <td> {compra.estado === "activa" && (
-                                <span className="text-primary">Activa</span> // Azul
-                            )}
-                                {compra.estado === "completada" && (
-                                    <span className="text-success">Completada</span> // Verde
-                                )}
-                                {compra.estado === "cancelada" && (
-                                    <span className="text-danger">Cancelada</span> // Rojo
-                                )}</td>
                             <td>
-                                <button onClick={() => cambiarEstadoCompra(compra.IdVenta, "completada")} className="btn btn-success btn-sm">
-                                    Completar
-                                </button>
-                                <button onClick={() => cambiarEstadoCompra(compra.IdVenta, "cancelada")} className="btn btn-danger btn-sm">
-                                    Cancelar
-                                </button>
-
-                                {/* {compra.estado === "activa" && (
-                                    <>
-                                        <button onClick={() => cambiarEstadoCompra(compra.IdVenta, "completada")} className="btn btn-success btn-sm">
-                                            Completar
-                                        </button>
-                                        <button onClick={() => cambiarEstadoCompra(compra.IdVenta, "cancelada")} className="btn btn-danger btn-sm">
-                                            Cancelar
-                                        </button>
-                                    </>
+                                {compra.estado === "activa" && (
+                                    <span className="text-primary">Activa</span>
                                 )}
                                 {compra.estado === "completada" && (
                                     <span className="text-success">Completada</span>
@@ -122,8 +111,14 @@ export default function ListaCompras() {
                                 {compra.estado === "cancelada" && (
                                     <span className="text-danger">Cancelada</span>
                                 )}
-                                */}
-
+                            </td>
+                            <td>
+                                <button onClick={() => cambiarEstadoCompra(compra.IdVenta, "completada")} className="btn btn-success btn-sm">
+                                    Completar
+                                </button>
+                                <button onClick={() => cambiarEstadoCompra(compra.IdVenta, "cancelada")} className="btn btn-danger btn-sm">
+                                    Cancelar
+                                </button>
                                 <button onClick={() => redirigirEditarCompra(compra.IdVenta)} className="btn btn-warning btn-sm ms-2">
                                     Editar
                                 </button>
@@ -148,4 +143,3 @@ export default function ListaCompras() {
         </div>
     );
 }
-
