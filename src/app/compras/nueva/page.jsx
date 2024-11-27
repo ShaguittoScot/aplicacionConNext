@@ -87,9 +87,9 @@ export default function CrearCompra() {
                                 key={cliente.id}
                                 className="list-group-item"
                                 onClick={() => {
-                                    setIdCliente(cliente.id); // Guardar el ID del cliente seleccionado
-                                    setClienteBusqueda(cliente.nombre); // Completar el campo de texto
-                                    setClientes([]); // Ocultar la lista
+                                    setIdCliente(cliente.id);
+                                    setClienteBusqueda(cliente.nombre);
+                                    setClientes([]);
                                 }}
                             >
                                 {cliente.nombre}
@@ -115,9 +115,9 @@ export default function CrearCompra() {
                                 key={producto.id}
                                 className="list-group-item"
                                 onClick={() => {
-                                    setIdProducto(producto.id); // Guardar el ID del producto seleccionado
-                                    setProductoBusqueda(producto.nombre); // Completar el campo de texto
-                                    setProductos([]); // Ocultar la lista
+                                    setIdProducto(producto.id);
+                                    setProductoBusqueda(producto.nombre)
+                                    setProductos([]);
                                 }}
                             >
                                 {producto.nombre}

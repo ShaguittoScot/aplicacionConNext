@@ -3,11 +3,10 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-// Componente que muestra la lista de compras
 export default function ListaCompras() {
-    const [compras, setCompras] = useState([]); // Estado para almacenar las compras
-    const [compraSeleccionada, setCompraSeleccionada] = useState(null); // Estado para la compra seleccionada
-    const [mostrarCanceladas, setMostrarCanceladas] = useState(false); // Estado para el filtro
+    const [compras, setCompras] = useState([]); 
+    const [compraSeleccionada, setCompraSeleccionada] = useState(null); 
+    const [mostrarCanceladas, setMostrarCanceladas] = useState(false); 
     const router = useRouter();
 
     useEffect(() => {
@@ -15,47 +14,49 @@ export default function ListaCompras() {
             const url = "http://localhost:3000/mostrarCompras";
             try {
                 const response = await axios.get(url);
-                setCompras(response.data); // Actualiza el estado con las compras obtenidas
+                setCompras(response.data);
             } catch (error) {
-                alert("Error al obtener compras."); // Mensaje de error si falla
+                alert("Error al obtener compras.");
             }
         };
 
-        fetchCompras(); // llama a la función para obtener compras
+        fetchCompras();
     }, []);
 
     const mostrarDetalles = (compra) => {
-        if (compraSeleccionada && compraSeleccionada.IdVenta === compra.IdVenta) {
-            setCompraSeleccionada(null);
-        } else {
-            setCompraSeleccionada(compra); // Seleccionar la nueva compra
-        }
+        setCompraSeleccionada(
+            compraSeleccionada && compraSeleccionada.IdVenta === compra.IdVenta
+                ? null
+                : compra
+        );
     };
 
     const redirigirAgregarProducto = () => {
-        router.push('/compras/nueva'); // Redirige a la página para un nuevo producto
+        router.push('/compras/nueva');
     };
 
     const cambiarEstadoCompra = async (idVenta, nuevoEstado) => {
         try {
             await axios.patch(`http://localhost:3000/actualizarEstadoCompra/${idVenta}/${nuevoEstado}`);
-            // Actualiza la lista de compras después de cambiar el estado
             const response = await axios.get("http://localhost:3000/mostrarCompras");
             setCompras(response.data);
             alert(`Estado de la compra actualizado a '${nuevoEstado}'`);
         } catch (error) {
-            alert("No se pudo cambiar el estado de la compra."); // Mensaje de error si falla
+            alert("No se pudo cambiar el estado de la compra.");
         }
     };
 
     const redirigirEditarCompra = (idVenta) => {
-        router.push(`/compras/editar/${idVenta}`); // Redirige a la página de edición de la compra con el ID
+        router.push(`/compras/editar/${idVenta}`);
     };
 
-    // Lógica para filtrar compras según el estado
-    const comprasFiltradas = mostrarCanceladas
-        ? compras.filter(compra => compra.estado !== "cancelada")
-        : compras;
+    const comprasFiltradas = compras
+        .filter(compra => mostrarCanceladas || compra.estado !== "cancelada")
+        .sort((a, b) => {
+            const dateA = new Date(`${a.fecha}T${a.hora}`);
+            const dateB = new Date(`${b.fecha}T${b.hora}`);
+            return dateB - dateA;
+        });
 
     return (
         <div className="container">
@@ -67,7 +68,7 @@ export default function ListaCompras() {
                 onClick={() => setMostrarCanceladas(!mostrarCanceladas)}
                 className="btn btn-secondary mb-3 ms-2"
             >
-                {mostrarCanceladas ? "Mostrar Todas" : "Filtrar Canceladas"}
+                {mostrarCanceladas ? "Ocultar Canceladas" : "Mostrar Canceladas"}
             </button>
 
             <table className="table">

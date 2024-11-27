@@ -1,12 +1,12 @@
 'use client';
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Importar useRouter
+import { useRouter } from "next/navigation";
 
 export default function MostrarProductos() {
     const [productos, setProductos] = useState([]);
     const [productoSeleccionado, setProductoSeleccionado] = useState(null);
-    const router = useRouter(); // Inicializar router
+    const router = useRouter();
 
     useEffect(() => {
         const obtenerProductos = async () => {
@@ -43,7 +43,7 @@ export default function MostrarProductos() {
     };
 
     const redirigirAgregarProducto = () => {
-        router.push('/productos/crear'); // Redirige a la página para crear un nuevo producto
+        router.push('/productos/crear');
     };
 
     return (

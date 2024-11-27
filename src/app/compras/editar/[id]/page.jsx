@@ -97,8 +97,8 @@ export default function EditarCompra() {
                                     className="list-group-item"
                                     onClick={() => {
                                         setCompra(prevCompra => ({ ...prevCompra, idCliente: cliente.id }));
-                                        setClienteBusqueda(cliente.nombre); // Mostrar el nombre en la UI
-                                        setMostrarClientes(false); // Ocultar lista después de seleccionar
+                                        setClienteBusqueda(cliente.nombre);
+                                        setMostrarClientes(false);
                                     }}
                                 >
                                     {cliente.nombre}
@@ -118,7 +118,7 @@ export default function EditarCompra() {
                         value={productoBusqueda}
                         onChange={(e) => {
                             setProductoBusqueda(e.target.value);
-                            setMostrarProductos(true); // Mostrar lista cuando el usuario empieza a escribir
+                            setMostrarProductos(true);
                         }}
                         required
                     />
@@ -130,8 +130,8 @@ export default function EditarCompra() {
                                     className="list-group-item"
                                     onClick={() => {
                                         setCompra(prevCompra => ({ ...prevCompra, idProducto: producto.id }));
-                                        setProductoBusqueda(producto.nombre); // Mostrar el nombre en la UI
-                                        setMostrarProductos(false); // Ocultar lista después de seleccionar
+                                        setProductoBusqueda(producto.nombre);
+                                        setMostrarProductos(false); // Oculta despues de seleccionar
                                     }}
                                 >
                                     {producto.nombre}
